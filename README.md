@@ -33,7 +33,7 @@ $factory = new Phrity\Http\HttpFactory(
 ```
 
 Popular PSR-17 implementations, such as [Nyholm](https://packagist.org/packages/nyholm/psr7) and [Guzzle](https://packagist.org/packages/guzzlehttp/psr7), often offer factories that support all interfaces.
-By using the create() method, the HttpFactory can take any implementation and configure the HttpFactory class with the factories the implementation supports.
+By using the `create()` method, the HttpFactory can take any implementation and configure the HttpFactory class with the factories the implementation supports.
 
 ```php
 $guzzlePsr7 = new GuzzleHttp\Psr7\HttpFactory();
