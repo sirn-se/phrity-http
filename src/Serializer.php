@@ -2,12 +2,11 @@
 
 namespace Phrity\Http;
 
-use BadMethodCallException;
+use DomainException;
 use Psr\Http\Message\{
     MessageInterface,
     ResponseInterface,
     RequestInterface,
-    UploadedFileInterface,
 };
 
 /**
@@ -45,6 +44,19 @@ class Serializer
         $headers = $this->formatHeaders($response);
         $contents = $response->getBody()->getContents();
         return sprintf("%s%s\r\n%s", $status, $headers, $contents);
+    }
+
+    /**
+     * @param MessageInterface $message
+     */
+    public function message(MessageInterface $message): string
+    {
+        if ($message instanceof RequestInterface) {
+            return $this->request($message);
+        } elseif ($message instanceof ResponseInterface) {
+            return $this->response($message);
+        }
+        throw new DomainException(sprintf('Unsupported message type: %s', get_class($message)));
     }
 
     protected function formatHeaders(MessageInterface $message): string

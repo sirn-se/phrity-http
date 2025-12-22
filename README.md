@@ -49,6 +49,7 @@ This string representation is a "raw" representation of HTTP request or response
 $serializer = new Serializer();
 $request = $serializer->request($psrRequest);
 $response = $serializer->response($psrResponse);
+$message = $serializer->message($psrMessage);
 ```
 
 ## Versions

@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Phrity\Http\Test;
 
-use BadMethodCallException;
+use DomainException;
 use GuzzleHttp\Psr7\HttpFactory as Guzzle;
 use PHPUnit\Framework\TestCase;
 use Phrity\Http\Serializer;
+use Phrity\Http\Test\BadMessage;
 use Psr\Http\Message\{
     RequestFactoryInterface,
     ResponseFactoryInterface,
@@ -82,5 +83,41 @@ class SerializerTest extends TestCase
         $expected = "HTTP/1.1 400 Bad Request\r\nTest-Header: test header\r\n\r\n{\"a\":22}";
         $result = $serializer->response($response);
         $this->assertEquals($expected, $result);
+    }
+
+    public function testRequestMessage(): void
+    {
+        $psr = new Guzzle();
+        $serializer = new Serializer();
+        $request = $psr
+            ->createRequest('GET', 'http://test.se')
+            ->withHeader('Test-Header', 'test header')
+            ;
+        $expected = "GET / HTTP/1.1\r\nHost: test.se\r\nTest-Header: test header\r\n\r\n";
+        $result = $serializer->message($request);
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testResponseMessage(): void
+    {
+        $psr = new Guzzle();
+        $serializer = new Serializer();
+        $response = $psr
+            ->createResponse(200)
+            ->withHeader('Test-Header', 'test header')
+            ;
+        $expected = "HTTP/1.1 200 OK\r\nTest-Header: test header\r\n\r\n";
+        $result = $serializer->message($response);
+        $this->assertEquals($expected, $result);
+    }
+
+    public function testBadMessage(): void
+    {
+        $psr = new Guzzle();
+        $serializer = new Serializer();
+        $message = new BadMessage();
+        $this->expectException(DomainException::class);
+        $this->expectExceptionMessage('Unsupported message type: Phrity\Http\Test\BadMessage');
+        $result = $serializer->message($message);
     }
 }
