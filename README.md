@@ -13,7 +13,7 @@ Install with [Composer](https://getcomposer.org/);
 composer require phrity/http
 ```
 
-## Phrity HttpFactory
+## HttpFactory
 
 Convenience wrapper for HTTP factories, where you can add all or any factories to the same class.
 The class will then delegate to actual implementation.
@@ -40,8 +40,20 @@ $guzzlePsr7 = new GuzzleHttp\Psr7\HttpFactory();
 $factory = Phrity\Http\HttpFactory::create($guzzlePsr7);
 ```
 
+## Serializer
+
+The serializer takes a PSR-7 HTTP Message and converts it to string.
+This string representation is a "raw" representation of HTTP request or response.
+
+```php
+$serializer = new Serializer();
+$request = $serializer->request($psrRequest);
+$response = $serializer->response($psrResponse);
+```
+
 ## Versions
 
 | Version | PHP | |
 | --- | --- | --- |
+| `1.1` | `^8.1` | Serializer; HTTP messages to string representation |
 | `1.0` | `^8.1` | HttpFactory convenience wrapper |
